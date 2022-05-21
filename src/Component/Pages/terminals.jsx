@@ -10,7 +10,7 @@ import Paper from "@mui/material/Paper";
 import { Button, Modal } from "@mui/material";
 import "../../Style/main.css";
 import "reactjs-popup/dist/index.css";
-import Upsert from "./Popups/userUpsert";
+import UpsertTerminal from "./Popups/terminalUpsert";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -34,6 +34,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 function createData(name, calories, fat, carbs, protein) {
   return { name, calories, fat, carbs, protein };
 }
+
 const rows = [
   createData(
     1,
@@ -102,7 +103,8 @@ const rows = [
     "Actions"
   ),
 ];
-export default function Users() {
+
+export default function Terminals() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -117,7 +119,7 @@ export default function Users() {
         }}
         onClick={handleOpen}
       >
-        Add new shop user
+        Add new terminal
       </Button>
       <Modal
         open={open}
@@ -125,19 +127,19 @@ export default function Users() {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-        <Upsert />
+        <UpsertTerminal />
       </Modal>
 
       <Table sx={{ width: "100%" }} aria-label='customized table'>
         <TableHead>
           <TableRow>
             <StyledTableCell align='left'>ID</StyledTableCell>
-            <StyledTableCell align='left'>Name</StyledTableCell>
-            <StyledTableCell align='left'>Username</StyledTableCell>
-            <StyledTableCell align='left'>Email</StyledTableCell>
-            <StyledTableCell align='left'>Telephone</StyledTableCell>
-            <StyledTableCell align='left'>Role</StyledTableCell>
-            <StyledTableCell align='left'>Shop</StyledTableCell>
+            <StyledTableCell align='left'>Terminal Name</StyledTableCell>
+            <StyledTableCell align='left'>Secure ID</StyledTableCell>
+            <StyledTableCell align='left'>Sale Terminal</StyledTableCell>
+            <StyledTableCell align='left'>Options</StyledTableCell>
+            <StyledTableCell align='left'>Description</StyledTableCell>
+            <StyledTableCell align='left'>Notes</StyledTableCell>
             <StyledTableCell align='left'>Status</StyledTableCell>
             <StyledTableCell align='left'>Actions</StyledTableCell>
           </TableRow>

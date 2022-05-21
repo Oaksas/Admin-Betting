@@ -7,9 +7,12 @@ import "../../../Style/main.css";
 import { borderRadius } from "@mui/system";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Visibility from "@mui/icons-material/Visibility";
+import Checkbox from "@mui/material/Checkbox";
 
 import {
   FormControl,
+  FormControlLabel,
+  FormGroup,
   FormHelperText,
   IconButton,
   Input,
@@ -26,7 +29,7 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 600,
+  width: 500,
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
@@ -53,7 +56,7 @@ const shopList = [
   },
 ];
 
-export default function Upsert() {
+export default function UpsertTerminal() {
   const handleChange = (event) => {
     setRole(event.target.value);
   };
@@ -74,6 +77,13 @@ export default function Upsert() {
       >
         <div>
           <TextField
+            id='description'
+            label='Description'
+            type='search'
+            variant='filled'
+            sx={{ m: 1, width: 200 }}
+          />
+          <TextField
             id='name'
             label='Name'
             type='search'
@@ -81,75 +91,42 @@ export default function Upsert() {
             sx={{ m: 1, width: 200 }}
           />
           <TextField
-            id='email'
-            label='E-mail'
+            id='notes'
+            label='Notes'
+            type='search'
+            variant='filled'
+            sx={{ m: 1, width: 200 }}
+          />{" "}
+          <TextField
+            id='secureID'
+            label='Secure ID'
             type='search'
             variant='filled'
             sx={{ m: 1, width: 200 }}
           />
-          <TextField
-            id='tel'
-            label='Tel'
-            type='number'
-            variant='filled'
-            InputLabelProps={{
-              shrink: true,
-            }}
-            sx={{ m: 1, width: 200 }}
-          />
-          <TextField
-            id='username'
-            label='Username'
-            type='search'
-            variant='filled'
-            sx={{ m: 1, width: 200 }}
-          />
-          <TextField
-            id='password'
-            label='Password'
-            type='password'
-            autoComplete='current-password'
-            variant='filled'
-            sx={{ m: 1, width: 200 }}
-          />
-          <TextField
-            id='confirmpassword'
-            label='Confirm Password'
-            type='password'
-            autoComplete='current-password'
-            variant='filled'
-            sx={{ m: 1, width: 200 }}
-          />
-          <TextField
-            id='outlined-select-currency'
-            select
-            label='Role'
-            value={role}
-            variant='filled'
-            onChange={handleChange}
-            sx={{ m: 1, width: 200 }}
-          >
-            {roles.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            id='outlined-select-currency'
-            select
-            label='Shop'
-            variant='filled'
-            value={shop}
-            onChange={handleChangeShop}
-            sx={{ m: 1, width: 200 }}
-          >
-            {shopList.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </TextField>
+          <FormGroup sx={{ m: 1 }}>
+            <FormControlLabel
+              label='Sale terminal'
+              control={<Checkbox defaultChecked color='secondary' />}
+            />
+            <FormControlLabel
+              label='RPR '
+              control={<Checkbox defaultChecked color='secondary' />}
+            />
+
+            <FormControlLabel
+              label='PAY '
+              control={<Checkbox defaultChecked color='secondary' />}
+            />
+            <FormControlLabel
+              label='CNL '
+              control={<Checkbox defaultChecked color='secondary' />}
+            />
+            <FormControlLabel
+              label='Status '
+              control={<Checkbox defaultChecked color='secondary' />}
+            />
+          </FormGroup>
           <Button
             variant='contained'
             color='secondary'

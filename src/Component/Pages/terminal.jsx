@@ -2,11 +2,10 @@ import React, { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import "../../Style/main.css";
 import { Box, Button, ButtonGroup } from "@mui/material";
-import Users from "./users";
+import Terminals from "./terminals";
 import { useNavigate } from "react-router-dom";
 
-const Home = () => {
-  const history = useNavigate();
+const Terminal = () => {
   return (
     <div sx={{ m: 3 }}>
       <Box
@@ -27,7 +26,7 @@ const Home = () => {
             mb: 1,
           }}
         >
-          Shop [001]: Test
+          Shop [001]: Terminal
         </Typography>
         <ButtonGroup
           variant='outlined'
@@ -43,21 +42,14 @@ const Home = () => {
           <Button>Limits</Button>
           <Button>Permissions</Button>
           <Button>Products</Button>
-          <Button
-            onClick={() => {
-              history("/terminal");
-            }}
-          >
-            Terminal
-          </Button>
+          <Button color='black'>Terminals</Button>
           <Button>Displays</Button>
           <Button>Staff</Button>
           <Button>Locations</Button>
-          <Button>Allowed IP Addresses</Button>
         </ButtonGroup>
-        <Users />
+        <Terminals />
       </Box>
     </div>
   );
 };
-export default Home;
+export default Terminal;

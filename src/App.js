@@ -3,6 +3,10 @@ import { createTheme, ThemeProvider, styled } from "@mui/material/styles";
 import Navbar from "./Component/Pages/Navigation/navbar";
 import { grey, orange, red } from "@mui/material/colors";
 import Home from "./Component/Pages/home";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Terminal from "./Component/Pages/terminal";
+import Login from "./Component/Pages/login";
+import Reports from "./Component/Pages/reports";
 
 const theme = createTheme({
   palette: {
@@ -24,14 +28,25 @@ const theme = createTheme({
     red: {
       main: red[500],
     },
+    black: {
+      main: grey[600],
+    },
   },
 });
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <div className='App'>
-        <Navbar />
-        <Home />
+        <BrowserRouter>
+          <Navbar />
+
+          <Routes>
+            <Route path='/' element={<Home />}></Route>
+            <Route path='/terminal' element={<Terminal />} />
+            <Route path='/report' element={<Reports />} />
+            <Route path='/login' element={<Login />} />
+          </Routes>
+        </BrowserRouter>
       </div>
     </ThemeProvider>
   );

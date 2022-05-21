@@ -14,8 +14,12 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import SearchPanel from "./searchPanelNal";
 import NavMain from "./navMain";
+
+import { useNavigate } from "react-router-dom";
+
 const Navbar = () => {
   const pages = [];
+  const history = useNavigate();
 
   const settings = ["Profile", "Logout"];
   const [currentDate, setCurrentDate] = useState(
@@ -35,7 +39,10 @@ const Navbar = () => {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (event) => {
+    if (event === "Logout") {
+      history("/login");
+    }
     setAnchorElUser(null);
   };
   useEffect(() => {
@@ -46,8 +53,7 @@ const Navbar = () => {
       );
     };
   }, []);
-
-  return (
+  return localStorage.getItem("Admin") ? (
     <div>
       <AppBar position='sticky' color='secondary'>
         <Container maxWidth='xl'>
@@ -57,6 +63,9 @@ const Navbar = () => {
               noWrap
               component='div'
               sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
+              onClick={() => {
+                history("/");
+              }}
             >
               Betshop
             </Typography>
@@ -140,7 +149,10 @@ const Navbar = () => {
                 onClose={handleCloseUserMenu}
               >
                 {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <MenuItem
+                    key={setting}
+                    onClick={(e) => handleCloseUserMenu(setting)}
+                  >
                     <Typography textAlign='center'>{setting}</Typography>
                   </MenuItem>
                 ))}
@@ -152,6 +164,8 @@ const Navbar = () => {
       <SearchPanel />
       <NavMain />
     </div>
+  ) : (
+    ""
   );
 };
 export default Navbar;

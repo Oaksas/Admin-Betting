@@ -1,8 +1,12 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
-
+import { Outlet, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import "../../../Style/main.css";
 export default function NavMain() {
+  const history = useNavigate();
+
   return (
     <ButtonGroup
       variant='contained'
@@ -11,13 +15,17 @@ export default function NavMain() {
       fullWidth
     >
       <Button>Home</Button>
-      <Button>Schedule</Button>
-      <Button>Betting</Button>
-      <Button>CMS</Button>
-      <Button>Online</Button>
-      <Button>Monitoring</Button>
-      <Button>Accounting</Button>
-      <Button>Reports</Button>
+      <Button>Agent</Button>
+      <Button>Shop</Button>
+      <Button>Permission</Button>
+      <Button>BetSlip</Button>
+      <Button
+        onClick={() => {
+          history("/report");
+        }}
+      >
+        Report
+      </Button>
       <Button>Administration</Button>
     </ButtonGroup>
   );
