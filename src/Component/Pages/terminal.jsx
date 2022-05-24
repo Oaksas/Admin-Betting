@@ -6,6 +6,10 @@ import Terminals from "./terminals";
 import { useNavigate } from "react-router-dom";
 
 const Terminal = () => {
+  const history = useNavigate();
+  history("/login");
+
+
   return (
     <div sx={{ m: 3 }}>
       <Box
@@ -42,7 +46,7 @@ const Terminal = () => {
           <Button>Limits</Button>
           <Button>Permissions</Button>
           <Button>Products</Button>
-          <Button color='black'>Terminals</Button>
+          <Button color='black'>Terminal</Button>
           <Button>Displays</Button>
           <Button>Staff</Button>
           <Button>Locations</Button>

@@ -12,6 +12,8 @@ import "../../Style/main.css";
 import "reactjs-popup/dist/index.css";
 import Upsert from "./Popups/userUpsert";
 import { Box } from "@material-ui/core";
+import { useNavigate } from "react-router-dom";
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,

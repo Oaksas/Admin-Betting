@@ -80,28 +80,24 @@ export default function UpsertTerminal() {
             id='description'
             label='Description'
             type='search'
-            variant='filled'
             sx={{ m: 1, width: 200 }}
           />
           <TextField
             id='name'
             label='Name'
             type='search'
-            variant='filled'
             sx={{ m: 1, width: 200 }}
           />
           <TextField
             id='notes'
             label='Notes'
             type='search'
-            variant='filled'
             sx={{ m: 1, width: 200 }}
           />{" "}
           <TextField
             id='secureID'
             label='Secure ID'
             type='search'
-            variant='filled'
             sx={{ m: 1, width: 200 }}
           />
           <FormGroup sx={{ m: 1 }}>

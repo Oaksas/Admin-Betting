@@ -53,7 +53,10 @@ const Navbar = () => {
       );
     };
   }, []);
-  return localStorage.getItem("Admin") ? (
+  if (localStorage.getItem("Admin")) {
+    // history("/login");
+  }
+  return !localStorage.getItem("Admin") ? (
     <div>
       <AppBar position='sticky' color='secondary'>
         <Container maxWidth='xl'>

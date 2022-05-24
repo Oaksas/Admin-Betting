@@ -26,10 +26,11 @@ const style = {
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 600,
+  width: 500,
   bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
+
   borderRadius: "10px",
 };
 const roles = [
@@ -77,21 +78,18 @@ export default function Upsert() {
             id='name'
             label='Name'
             type='search'
-            variant='filled'
             sx={{ m: 1, width: 200 }}
           />
           <TextField
             id='email'
             label='E-mail'
             type='search'
-            variant='filled'
             sx={{ m: 1, width: 200 }}
           />
           <TextField
             id='tel'
             label='Tel'
             type='number'
-            variant='filled'
             InputLabelProps={{
               shrink: true,
             }}
@@ -101,7 +99,6 @@ export default function Upsert() {
             id='username'
             label='Username'
             type='search'
-            variant='filled'
             sx={{ m: 1, width: 200 }}
           />
           <TextField
@@ -109,7 +106,6 @@ export default function Upsert() {
             label='Password'
             type='password'
             autoComplete='current-password'
-            variant='filled'
             sx={{ m: 1, width: 200 }}
           />
           <TextField
@@ -117,7 +113,6 @@ export default function Upsert() {
             label='Confirm Password'
             type='password'
             autoComplete='current-password'
-            variant='filled'
             sx={{ m: 1, width: 200 }}
           />
           <TextField
@@ -125,7 +120,6 @@ export default function Upsert() {
             select
             label='Role'
             value={role}
-            variant='filled'
             onChange={handleChange}
             sx={{ m: 1, width: 200 }}
           >
@@ -139,7 +133,6 @@ export default function Upsert() {
             id='outlined-select-currency'
             select
             label='Shop'
-            variant='filled'
             value={shop}
             onChange={handleChangeShop}
             sx={{ m: 1, width: 200 }}
