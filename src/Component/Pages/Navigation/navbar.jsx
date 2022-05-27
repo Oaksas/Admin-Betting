@@ -41,6 +41,7 @@ const Navbar = () => {
 
   const handleCloseUserMenu = (event) => {
     if (event === "Logout") {
+      localStorage.removeItem("tokenAdmin");
       history("/login");
     }
     setAnchorElUser(null);
@@ -51,12 +52,13 @@ const Navbar = () => {
         () => setCurrentDate(moment().format("MMMM Do YYYY, h:mm:ss a")),
         300
       );
+      if (!localStorage.getItem("tokenAdmin")) {
+        history("/login");
+      }
     };
   }, []);
-  if (localStorage.getItem("Admin")) {
-    // history("/login");
-  }
-  return !localStorage.getItem("Admin") ? (
+
+  return localStorage.getItem("tokenAdmin") ? (
     <div>
       <AppBar position='sticky' color='secondary'>
         <Container maxWidth='xl'>

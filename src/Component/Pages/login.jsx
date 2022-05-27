@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useAlert } from "react-alert";
 import Coin from "react-cssfx-loading/lib/CircularProgress";
+import { useNavigate } from "react-router-dom";
 
 import { Button, TextField } from "@mui/material";
 import "../../Style/main.css";
@@ -20,6 +21,8 @@ const style = {
   borderRadius: "10px",
 };
 export default function Login() {
+  const history = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -36,41 +39,46 @@ export default function Login() {
   };
 
   const handleSubmit = (e) => {
-    console.log(e.target.value);
+    setProcessing(true);
+    setIsActive(true);
     e.preventDefault();
     if (username === "" || password === "") {
       alert.show("Empty Credential ");
+      setProcessing(false);
+      setIsActive(false);
       return;
     } else {
-      setProcessing(true);
-      console.log(username, password);
-
       var credential = {
         username: username,
         password: password,
       };
-      if (localStorage.getItem("token")) {
+      if (localStorage.getItem("tokenAdmin")) {
         setProcessing(false);
-        // window.location.pathname = "/";
+        setIsActive(false);
+
+        history("/");
       }
       axios
-        .post(BASEURL + "auth/account/login/", credential)
+        .post(BASEURL + "auth/account/login", credential)
         .then((response) => {
           if (response.data.status === "success") {
-            localStorage.setItem("Admin", response.data.data.token);
-            localStorage.setItem("user", response.data.data.username);
+            localStorage.setItem("tokenAdmin", response.data.post.data.token);
+            // localStorage.setItem("user", response.data.data.username);
 
             setProcessing(false);
+            setIsActive(false);
             alert.success("Correct Credential ");
+            history("/");
           } else {
             setProcessing(false);
+            setIsActive(false);
             alert.show("Incorrect Credential ");
           }
         })
         .catch((err) => {
           setProcessing(false);
-
-          alert.show("Incorrect Credential ");
+          setIsActive(false);
+          console.log(err);
         });
     }
   };
@@ -112,7 +120,7 @@ export default function Login() {
             onClick={(e) => handleSubmit(e)}
             disabled={isActive}
           >
-            {processing ? (
+            {processing === true ? (
               <Coin
                 color='#0066ff'
                 width='30px'
