@@ -7,6 +7,10 @@ import { useNavigate } from "react-router-dom";
 
 const Home = () => {
   const history = useNavigate();
+
+  if (!localStorage.getItem("tokenAdmin")) {
+    history("/login");
+  }
   return (
     <div sx={{ m: 3 }}>
       <Box

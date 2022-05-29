@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -7,22 +7,39 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
-import TextField from "@mui/material/TextField";
+import MomentUtils from "@date-io/moment";
 
+import PropTypes from "prop-types";
+import { useTheme } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import moment from "moment";
+
+import FirstPageIcon from "@mui/icons-material/FirstPage";
+import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
+import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
+import LastPageIcon from "@mui/icons-material/LastPage";
 import {
   Button,
   ButtonGroup,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Modal,
   Select,
+  TableFooter,
+  TablePagination,
 } from "@mui/material";
+import {
+  DatePicker,
+  TimePicker,
+  DateTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+
 import "../../Style/main.css";
 import "reactjs-popup/dist/index.css";
 import Upsert from "./Popups/userUpsert";
-import { Box } from "@material-ui/core";
 import Coin from "react-cssfx-loading/lib/CircularProgress";
 
 import { useNavigate } from "react-router-dom";
@@ -48,24 +65,74 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
     border: 0,
   },
 }));
+function TablePaginationActions(props) {
+  const theme = useTheme();
+  const { count, page, rowsPerPage, onPageChange } = props;
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+  const handleFirstPageButtonClick = (event) => {
+    onPageChange(event, 0);
+  };
+
+  const handleBackButtonClick = (event) => {
+    onPageChange(event, page - 1);
+  };
+
+  const handleNextButtonClick = (event) => {
+    onPageChange(event, page + 1);
+  };
+
+  const handleLastPageButtonClick = (event) => {
+    onPageChange(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+  };
+
+  return (
+    <Box sx={{ flexShrink: 0, ml: 2.5 }}>
+      <IconButton
+        onClick={handleFirstPageButtonClick}
+        disabled={page === 0}
+        aria-label='first page'
+      >
+        {theme.direction === "rtl" ? <LastPageIcon /> : <FirstPageIcon />}
+      </IconButton>
+      <IconButton
+        onClick={handleBackButtonClick}
+        disabled={page === 0}
+        aria-label='previous page'
+      >
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowRight />
+        ) : (
+          <KeyboardArrowLeft />
+        )}
+      </IconButton>
+      <IconButton
+        onClick={handleNextButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label='next page'
+      >
+        {theme.direction === "rtl" ? (
+          <KeyboardArrowLeft />
+        ) : (
+          <KeyboardArrowRight />
+        )}
+      </IconButton>
+      <IconButton
+        onClick={handleLastPageButtonClick}
+        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
+        aria-label='last page'
+      >
+        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
+      </IconButton>
+    </Box>
+  );
 }
 
-const rows = [
-  createData(
-    1,
-    "tmt",
-    "tm1",
-    "email",
-    "Telephone",
-    "Role",
-    "Shop",
-    "Status",
-    "Actions"
-  ),
-];
+TablePaginationActions.propTypes = {
+  count: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+};
 
 export default function Report() {
   const [open, setOpen] = useState(false);
@@ -74,29 +141,57 @@ export default function Report() {
   const [reports, setReports] = useState([]);
   const [date, setDate] = React.useState("");
   const [cashier, setCashier] = React.useState("");
-  const [month, setMonth] = React.useState("");
+  const [cashiers, setCashiers] = React.useState([]);
+  const [shops, setShops] = React.useState([]);
+  const [gameType, setGameType] = React.useState();
   const [shop, setShop] = React.useState("");
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(30);
+  const [processing, setProcessing] = useState(false);
+  const [selectedStartDate, setStartDate] = useState(new Date());
+  const [selectedEndDate, setEndDate] = useState(new Date());
 
-  const handleDateChange = (event) => {
-    setDate(event.target.value);
-    handleSelectedDate();
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - reports.length) : 0;
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+    handleSelectedFilter({ page: newPage });
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 30));
+    setPage(0);
+  };
+
+  const handleStartDateChange = (event) => {
+    // console.log(moment(event._d).format("YYYY DD MM"));
+    setStartDate(moment(event._d).format("YYYY DD MM"));
+  };
+  const handleEndDateChange = (event) => {
+    setEndDate(moment(event._d).format("YYYY DD MM"));
+    handleSelectedFilter({
+      startDate: selectedStartDate,
+      endDate: selectedEndDate,
+    });
   };
   const handleCashierChange = (event) => {
-    setDate(event.target.value);
-    handleSelectedCashier();
+    setCashier(event.target.value);
+    handleSelectedFilter({ cashier: cashier });
+  };
+  const handleGameTypeChange = (event) => {
+    console.log(event.target.value);
+    handleSelectedFilter({ gameType: event.target.value });
   };
   const handleShopChange = (event) => {
-    setDate(event.target.value);
-    handleSelectedShop();
-  };
-  const handleMonthChange = (event) => {
-    setDate(event.target.value);
-    handleSelectedMonth();
+    console.log(event);
+
+    setShop(event.target.value);
+    handleSelectedFilter({ shop: shop });
   };
 
-  const [processing, setProcessing] = useState(false);
-
-  const handleSelectedDate = () => {
+  const handleSelectedFilter = (param) => {
     setProcessing(true);
 
     axios.interceptors.request.use(
@@ -109,7 +204,7 @@ export default function Report() {
       }
     );
     axios
-      .post(BASEURL + "report/adminreport")
+      .post(BASEURL + "report/adminreport", param)
       .then((response) => {
         if (response.data.report.data) {
           var report = response.data.report.data;
@@ -129,9 +224,7 @@ export default function Report() {
       });
   };
 
-  const handleSelectedCashier = () => {
-    setProcessing(true);
-
+  const handleAllCashiers = () => {
     axios.interceptors.request.use(
       (config) => {
         config.headers.authorization = `${localStorage.getItem("tokenAdmin")}`;
@@ -142,29 +235,21 @@ export default function Report() {
       }
     );
     axios
-      .post(BASEURL + "report/adminreport")
+      .get(BASEURL + "cashier/")
       .then((response) => {
-        if (response.data.report.data) {
-          var report = response.data.report.data;
-          setReports(report);
-          setProcessing(false);
-          alert.success("Response ");
-          report.forEach((r) => {
-            console.log(r);
-          });
+        if (response.data.get.data) {
+          var cashiers = response.data.get.data;
+          setCashiers(cashiers);
         } else {
-          setProcessing(false);
-          alert.show("Some Error ");
+          alert.show("Error Fetching Cashiers ");
         }
       })
       .catch((err) => {
-        setProcessing(false);
+        alert.show("Error try again ");
       });
   };
 
-  const handleSelectedShop = () => {
-    setProcessing(true);
-
+  const handleAllShops = () => {
     axios.interceptors.request.use(
       (config) => {
         config.headers.authorization = `${localStorage.getItem("tokenAdmin")}`;
@@ -175,59 +260,19 @@ export default function Report() {
       }
     );
     axios
-      .post(BASEURL + "report/adminreport")
+      .get(BASEURL + "shop/")
       .then((response) => {
-        if (response.data.report.data) {
-          var report = response.data.report.data;
-          setReports(report);
-          setProcessing(false);
-          alert.success("Response ");
-          report.forEach((r) => {
-            console.log(r);
-          });
+        if (response.data.get.data) {
+          var shops = response.data.get.data;
+          setShops(shops);
         } else {
-          setProcessing(false);
-          alert.show("Some Error ");
+          alert.show("Error Fetching Shops ");
         }
       })
       .catch((err) => {
-        setProcessing(false);
+        alert.show("Error try again ");
       });
   };
-
-  const handleSelectedMonth = () => {
-    setProcessing(true);
-
-    axios.interceptors.request.use(
-      (config) => {
-        config.headers.authorization = `${localStorage.getItem("tokenAdmin")}`;
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
-    axios
-      .post(BASEURL + "report/adminreport")
-      .then((response) => {
-        if (response.data.report.data) {
-          var report = response.data.report.data;
-          setReports(report);
-          setProcessing(false);
-          alert.success("Response ");
-          report.forEach((r) => {
-            console.log(r);
-          });
-        } else {
-          setProcessing(false);
-          alert.show("Some Error ");
-        }
-      })
-      .catch((err) => {
-        setProcessing(false);
-      });
-  };
-
   const handleAllReport = () => {
     setProcessing(true);
 
@@ -262,6 +307,8 @@ export default function Report() {
   };
   useEffect(() => {
     handleAllReport();
+    handleAllCashiers();
+    handleAllShops();
   }, []);
   return processing ? (
     <Coin
@@ -274,54 +321,72 @@ export default function Report() {
   ) : (
     <div sx={{ m: 3 }}>
       <ButtonGroup
-        variant='contained'
         aria-label='outlined  button group'
         color='secondary'
-        sx={{ width: 300, mt: 2 }}
+        sx={{ width: 700, mt: 2 }}
       >
-        <FormControl fullWidth>
+        <FormControl fullWidth variant='standard'>
           <InputLabel id='demo-simple-select-label'>Shop</InputLabel>
           <Select
             labelId='demo-simple-select-label'
             id='demo-simple-select'
             value={shop}
             label='Shop'
-            onChange={handleShopChange}
+            onChange={(e) => handleShopChange(e)}
           >
-            <MenuItem value={1}>Shop1</MenuItem>
-            <MenuItem value={2}>Shop2</MenuItem>
-            <MenuItem value={3}>Shop3</MenuItem>
+            {shops.map((shop, key) => (
+              <MenuItem value={shop.TerminalId}>{shop.shopname}</MenuItem>
+            ))}
           </Select>
         </FormControl>
-        <FormControl fullWidth>
+        <FormControl fullWidth variant='standard'>
           <InputLabel id='demo-simple-select-label'>Cashier</InputLabel>
           <Select
             labelId='demo-simple-select-label'
             id='demo-simple-select'
             value={cashier}
             label='Cashier'
-            onChange={handleCashierChange}
+            onChange={(e) => handleCashierChange(e)}
           >
-            <MenuItem value={1}>Cashier1</MenuItem>
-            <MenuItem value={2}>Cashier2</MenuItem>
-            <MenuItem value={3}>Cashier3</MenuItem>
+            {cashiers.map((cashier, key) => (
+              <MenuItem value={cashier.id}>{cashier.username}</MenuItem>
+            ))}
           </Select>
         </FormControl>
-        <FormControl fullWidth>
-          <InputLabel id='demo-simple-select-label'>Month</InputLabel>
+        <FormControl fullWidth variant='standard'>
+          <InputLabel id='demo-simple-select-label'>Game Type</InputLabel>
           <Select
             labelId='demo-simple-select-label'
             id='demo-simple-select'
-            value={month}
-            label='Month'
-            onChange={handleMonthChange}
+            value={gameType}
+            label='GameType'
+            onChange={(e) => handleGameTypeChange(e)}
           >
-            <MenuItem value={1}>Month1</MenuItem>
-            <MenuItem value={2}>Month2</MenuItem>
-            <MenuItem value={3}>Month3</MenuItem>
+            <MenuItem value={"89b14e80-c402-11ec-a9d1-65b049643e90"}>
+              Spin
+            </MenuItem>
           </Select>
         </FormControl>
+        <FormControl fullWidth variant='standard'>
+          <MuiPickersUtilsProvider utils={MomentUtils}>
+            <DatePicker
+              label='Start Date'
+              value={selectedStartDate}
+              onChange={(e) => handleStartDateChange(e)}
+            />
+          </MuiPickersUtilsProvider>
+        </FormControl>
+        <FormControl fullWidth variant='standard'>
+          <MuiPickersUtilsProvider utils={MomentUtils}>
+            <DatePicker
+              label='End Date'
+              value={selectedEndDate}
+              onChange={(e) => handleEndDateChange(e)}
+            />
+          </MuiPickersUtilsProvider>
+        </FormControl>
       </ButtonGroup>
+
       <Box
         fullwidth
         alignItems='center'
@@ -349,7 +414,13 @@ export default function Report() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {reports.map((row, key) => (
+              {(rowsPerPage > 0
+                ? reports.slice(
+                    page * rowsPerPage,
+                    page * rowsPerPage + rowsPerPage
+                  )
+                : reports
+              ).map((row, key) => (
                 <StyledTableRow key={key}>
                   <StyledTableCell component='th' scope='row'>
                     {row.date}
@@ -373,6 +444,26 @@ export default function Report() {
               ))}
             </TableBody>
           </Table>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[30, { label: "All", value: -10 }]}
+                colSpan={3}
+                count={reports.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    "aria-label": "rows per page",
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
         </TableContainer>
       </Box>
     </div>
