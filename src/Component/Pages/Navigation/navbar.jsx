@@ -41,7 +41,7 @@ const Navbar = () => {
 
   const handleCloseUserMenu = (event) => {
     if (event === "Logout") {
-      localStorage.removeItem("tokenAdmin");
+      localStorage.setItem("tokenAdmin", null);
       history("/login");
     }
     setAnchorElUser(null);

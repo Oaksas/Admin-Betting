@@ -8,6 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import MomentUtils from "@date-io/moment";
+import { useNavigate } from "react-router-dom";
 
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
@@ -42,7 +43,6 @@ import "reactjs-popup/dist/index.css";
 import Upsert from "./Popups/userUpsert";
 import Coin from "react-cssfx-loading/lib/CircularProgress";
 
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASEURL } from "../../Constants/url";
 
@@ -149,7 +149,11 @@ export default function Report() {
   const [rowsPerPage, setRowsPerPage] = React.useState(30);
   const [processing, setProcessing] = useState(false);
   const [selectedStartDate, setStartDate] = useState(new Date());
+  const [selectedShowStartDate, setShowStartDate] = useState(new Date());
+  const [selectedShowEndDate, setShowEndDate] = useState(new Date());
+
   const [selectedEndDate, setEndDate] = useState(new Date());
+  const history = useNavigate();
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -167,10 +171,15 @@ export default function Report() {
 
   const handleStartDateChange = (event) => {
     // console.log(moment(event._d).format("YYYY DD MM"));
-    setStartDate(moment(event._d).format("YYYY DD MM"));
+    setShowStartDate(event._d);
+
+    setStartDate(moment(event._d).format("DD/MM/YYYY"));
   };
   const handleEndDateChange = (event) => {
-    setEndDate(moment(event._d).format("YYYY DD MM"));
+    setShowEndDate(event._d);
+
+    setEndDate(moment(event._d).format("DD/MM/YYYY"));
+
     handleSelectedFilter({
       startDate: selectedStartDate,
       endDate: selectedEndDate,
@@ -306,6 +315,9 @@ export default function Report() {
       });
   };
   useEffect(() => {
+    if (!localStorage.getItem("tokenAdmin")) {
+      history("/login");
+    }
     handleAllReport();
     handleAllCashiers();
     handleAllShops();
@@ -371,7 +383,8 @@ export default function Report() {
           <MuiPickersUtilsProvider utils={MomentUtils}>
             <DatePicker
               label='Start Date'
-              value={selectedStartDate}
+              format='DD/MM/YYYY'
+              value={selectedShowStartDate}
               onChange={(e) => handleStartDateChange(e)}
             />
           </MuiPickersUtilsProvider>
@@ -380,7 +393,8 @@ export default function Report() {
           <MuiPickersUtilsProvider utils={MomentUtils}>
             <DatePicker
               label='End Date'
-              value={selectedEndDate}
+              value={selectedShowEndDate}
+              format='DD/MM/YYYY'
               onChange={(e) => handleEndDateChange(e)}
             />
           </MuiPickersUtilsProvider>
