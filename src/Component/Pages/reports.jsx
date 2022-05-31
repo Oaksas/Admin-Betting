@@ -203,7 +203,7 @@ export default function Report() {
 
     axios.interceptors.request.use(
       (config) => {
-        config.headers.authorization = `${localStorage.getItem("tokenAdmin")}`;
+        config.headers.authorization = `${localStorage.getItem("AdminToken")}`;
         return config;
       },
       (error) => {
@@ -217,13 +217,11 @@ export default function Report() {
           var report = response.data.report.data;
           setReports(report);
           setProcessing(false);
-          alert.success("Response ");
           report.forEach((r) => {
             console.log(r);
           });
         } else {
           setProcessing(false);
-          alert.show("Some Error ");
         }
       })
       .catch((err) => {
@@ -234,7 +232,7 @@ export default function Report() {
   const handleAllCashiers = () => {
     axios.interceptors.request.use(
       (config) => {
-        config.headers.authorization = `${localStorage.getItem("tokenAdmin")}`;
+        config.headers.authorization = `${localStorage.getItem("AdminToken")}`;
         return config;
       },
       (error) => {
@@ -259,7 +257,7 @@ export default function Report() {
   const handleAllShops = () => {
     axios.interceptors.request.use(
       (config) => {
-        config.headers.authorization = `${localStorage.getItem("tokenAdmin")}`;
+        config.headers.authorization = `${localStorage.getItem("AdminToken")}`;
         return config;
       },
       (error) => {
@@ -285,7 +283,7 @@ export default function Report() {
 
     axios.interceptors.request.use(
       (config) => {
-        config.headers.authorization = `${localStorage.getItem("tokenAdmin")}`;
+        config.headers.authorization = `${localStorage.getItem("AdminToken")}`;
         return config;
       },
       (error) => {
@@ -313,7 +311,7 @@ export default function Report() {
       });
   };
   useEffect(() => {
-    if (!localStorage.getItem("tokenAdmin")) {
+    if (localStorage.getItem("AdminToken") == null) {
       history("/login");
     }
     handleAllReport();

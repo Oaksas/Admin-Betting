@@ -41,7 +41,8 @@ const Navbar = () => {
 
   const handleCloseUserMenu = (event) => {
     if (event === "Logout") {
-      localStorage.setItem("tokenAdmin", null);
+      localStorage.setItem("AdminToken", null);
+      console.log(localStorage.getItem("AdminToken"));
       history("/login");
     }
     setAnchorElUser(null);
@@ -52,13 +53,15 @@ const Navbar = () => {
         () => setCurrentDate(moment().format("MMMM Do YYYY, h:mm:ss a")),
         300
       );
-      if (!localStorage.getItem("tokenAdmin")) {
+      if (localStorage.getItem("AdminToken") === null) {
         history("/login");
       }
     };
   }, []);
 
-  return localStorage.getItem("tokenAdmin") ? (
+  return localStorage.getItem("AdminToken") == null ? (
+    ""
+  ) : (
     <div>
       <AppBar position='sticky' color='secondary'>
         <Container maxWidth='xl'>
@@ -169,8 +172,6 @@ const Navbar = () => {
       <SearchPanel />
       <NavMain />
     </div>
-  ) : (
-    ""
   );
 };
 export default Navbar;

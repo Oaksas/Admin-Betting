@@ -9,7 +9,7 @@ import AlertTemplate from "react-alert-template-basic";
 //alert component
 const options = {
   // you can also just use 'bottom center'
-  position: positions.TOP_CENTER,
+  position: positions.MIDDLE,
   timeout: 5000,
   offset: "50px",
   // you can also just use 'scale'

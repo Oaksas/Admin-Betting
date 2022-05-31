@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 const Terminal = () => {
   const history = useNavigate();
-  if (!localStorage.getItem("tokenAdmin")) {
+  if (!localStorage.getItem("AdminToken")) {
     history("/login");
   }
 

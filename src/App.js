@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Terminal from "./Component/Pages/terminal";
 import Login from "./Component/Pages/login";
 import Reports from "./Component/Pages/reports";
+import Shops from "./Component/Pages/shop";
 
 const theme = createTheme({
   palette: {
@@ -44,6 +45,7 @@ function App() {
             <Route path='/' element={<Home />}></Route>
             <Route path='/terminal' element={<Terminal />} />
             <Route path='/report' element={<Reports />} />
+            <Route path='/shop' element={<Shops />} />
             <Route path='/login' element={<Login />} />
           </Routes>
         </BrowserRouter>

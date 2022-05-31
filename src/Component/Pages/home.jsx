@@ -9,7 +9,7 @@ const Home = () => {
   const history = useNavigate();
 
   useEffect(() => {
-    if (!localStorage.getItem("tokenAdmin")) {
+    if (localStorage.getItem("AdminToken") == null) {
       history("/login");
     }
   }, []);

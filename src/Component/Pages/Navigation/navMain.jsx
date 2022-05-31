@@ -7,7 +7,7 @@ import "../../../Style/main.css";
 export default function NavMain() {
   const history = useNavigate();
 
-  return (
+  return localStorage.getItem("tokenAdmin") ? (
     <ButtonGroup
       variant='contained'
       aria-label='outlined  button group'
@@ -16,7 +16,13 @@ export default function NavMain() {
     >
       <Button>Home</Button>
       <Button>Agent</Button>
-      <Button>Shop</Button>
+      <Button
+        onClick={() => {
+          history("/shop");
+        }}
+      >
+        Shop
+      </Button>
       <Button>Permission</Button>
       <Button>BetSlip</Button>
       <Button
@@ -28,5 +34,7 @@ export default function NavMain() {
       </Button>
       <Button>Administration</Button>
     </ButtonGroup>
+  ) : (
+    ""
   );
 }
