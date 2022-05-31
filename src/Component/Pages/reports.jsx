@@ -172,12 +172,10 @@ export default function Report() {
   const handleStartDateChange = (event) => {
     // console.log(moment(event._d).format("YYYY DD MM"));
     setShowStartDate(event._d);
-
     setStartDate(moment(event._d).format("DD/MM/YYYY"));
   };
   const handleEndDateChange = (event) => {
     setShowEndDate(event._d);
-
     setEndDate(moment(event._d).format("DD/MM/YYYY"));
 
     handleSelectedFilter({
@@ -190,7 +188,7 @@ export default function Report() {
     handleSelectedFilter({ cashier: cashier });
   };
   const handleGameTypeChange = (event) => {
-    console.log(event.target.value);
+    setGameType(event.target.value);
     handleSelectedFilter({ gameType: event.target.value });
   };
   const handleShopChange = (event) => {
@@ -337,7 +335,7 @@ export default function Report() {
         color='secondary'
         sx={{ width: 700, mt: 2 }}
       >
-        <FormControl fullWidth variant='standard'>
+        <FormControl fullWidth variant='standard' sx={{ mr: 2 }}>
           <InputLabel id='demo-simple-select-label'>Shop</InputLabel>
           <Select
             labelId='demo-simple-select-label'
@@ -351,7 +349,7 @@ export default function Report() {
             ))}
           </Select>
         </FormControl>
-        <FormControl fullWidth variant='standard'>
+        <FormControl fullWidth variant='standard' sx={{ mr: 2 }}>
           <InputLabel id='demo-simple-select-label'>Cashier</InputLabel>
           <Select
             labelId='demo-simple-select-label'
@@ -365,7 +363,7 @@ export default function Report() {
             ))}
           </Select>
         </FormControl>
-        <FormControl fullWidth variant='standard'>
+        <FormControl fullWidth variant='standard' sx={{ mr: 2 }}>
           <InputLabel id='demo-simple-select-label'>Game Type</InputLabel>
           <Select
             labelId='demo-simple-select-label'
@@ -415,16 +413,16 @@ export default function Report() {
             <TableHead>
               <TableRow>
                 <StyledTableCell align='left'>Date</StyledTableCell>
-                <StyledTableCell align='left'>Sold</StyledTableCell>
-                <StyledTableCell align='left'>Won</StyledTableCell>
-                <StyledTableCell align='left'>Cancelled</StyledTableCell>
-                <StyledTableCell align='left'>Stakes</StyledTableCell>
-                <StyledTableCell align='left'>Paid</StyledTableCell>
-                <StyledTableCell align='left'>Unpaid</StyledTableCell>
-                <StyledTableCell align='left'>Cash</StyledTableCell>
-                <StyledTableCell align='left'>Payout</StyledTableCell>
-                <StyledTableCell align='left'>Win %</StyledTableCell>
-                <StyledTableCell align='left'>Payout %</StyledTableCell>
+                <StyledTableCell align='right'>Sold</StyledTableCell>
+                <StyledTableCell align='right'>Won</StyledTableCell>
+                <StyledTableCell align='right'>Cancelled</StyledTableCell>
+                <StyledTableCell align='right'>Stakes</StyledTableCell>
+                <StyledTableCell align='right'>Paid</StyledTableCell>
+                <StyledTableCell align='right'>Unpaid</StyledTableCell>
+                <StyledTableCell align='right'>Cash</StyledTableCell>
+                <StyledTableCell align='right'>Payout</StyledTableCell>
+                <StyledTableCell align='right'>Win %</StyledTableCell>
+                <StyledTableCell align='right'>Payout %</StyledTableCell>
               </TableRow>
             </TableHead>
             <TableBody>
