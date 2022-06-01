@@ -198,7 +198,16 @@ export default function Report() {
     handleSelectedFilter({ shop: shop });
   };
 
-  const handleSelectedFilter = (param) => {
+  const handleSelectedFilter = (params) => {
+    const param={
+    page:page,
+    shopname:shop,
+    CashierId:cashier,
+    GameTypeId:"89b14e80-c402-11ec-a9d1-65b049643e90",
+    startDate:selectedStartDate,
+    endDate:selectedEndDate
+    }
+    
     setProcessing(true);
 
     axios.interceptors.request.use(
