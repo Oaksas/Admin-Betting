@@ -26,42 +26,6 @@ const Home = () => {
           p: 2,
         }}
       >
-        {" "}
-        <Typography
-          variant='h6'
-          className='alignLeft'
-          color='secondary'
-          sx={{
-            mb: 1,
-          }}
-        >
-          Shop [001]: Test
-        </Typography>
-        <ButtonGroup
-          variant='outlined'
-          aria-label='outlined  button group'
-          color='secondary'
-          sx={{
-            mb: 1,
-          }}
-        >
-          <Button>Details</Button>
-          <Button>Commissions</Button>
-          <Button>Product Comm.</Button>
-          <Button>Limits</Button>
-          <Button>Permissions</Button>
-          <Button>Products</Button>
-          <Button
-            onClick={() => {
-              history("/terminal");
-            }}
-          >
-            Terminal
-          </Button>
-          <Button>Displays</Button>
-          <Button>Staff</Button>
-          <Button>Locations</Button>
-        </ButtonGroup>
         <Users />
       </Box>
     </div>
