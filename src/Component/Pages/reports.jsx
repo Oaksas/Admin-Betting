@@ -161,8 +161,8 @@ export default function Report() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - reports.length) : 0;
 
   const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-    handleSelectedFilter({ page: newPage });
+    setPage(newPage+1);
+    handleSelectedFilter({ page: page });
   };
 
   const handleChangeRowsPerPage = (event) => {
@@ -171,13 +171,12 @@ export default function Report() {
   };
 
   const handleStartDateChange = (event) => {
-    // console.log(moment(event._d).format("YYYY DD MM"));
     setShowStartDate(event._d);
-    setStartDate(moment(event._d).format("DD/MM/YYYY"));
+    setStartDate(moment(event._d).format("YYYY/MM/DD"));
   };
   const handleEndDateChange = (event) => {
     setShowEndDate(event._d);
-    setEndDate(moment(event._d).format("DD/MM/YYYY"));
+    setEndDate(moment(event._d).format("YYYY/MM/DD"));
 
     handleSelectedFilter({
       startDate: selectedStartDate,
@@ -380,7 +379,7 @@ export default function Report() {
           <MuiPickersUtilsProvider utils={MomentUtils}>
             <DatePicker
               label='Start Date'
-              format='DD/MM/YYYY'
+              format='YYYY/MM/DD'
               value={selectedShowStartDate}
               onChange={(e) => handleStartDateChange(e)}
             />
@@ -391,7 +390,7 @@ export default function Report() {
             <DatePicker
               label='End Date'
               value={selectedShowEndDate}
-              format='DD/MM/YYYY'
+              format='YYYY/MM/DD'
               onChange={(e) => handleEndDateChange(e)}
             />
           </MuiPickersUtilsProvider>
