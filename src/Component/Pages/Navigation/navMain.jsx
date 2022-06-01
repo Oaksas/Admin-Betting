@@ -7,7 +7,9 @@ import "../../../Style/main.css";
 export default function NavMain() {
   const history = useNavigate();
 
-  return localStorage.getItem("tokenAdmin") ? (
+  return localStorage.getItem("AdminToken") === "false" ? (
+    ""
+  ) :  (
     <ButtonGroup
       variant='contained'
       aria-label='outlined  button group'
@@ -40,7 +42,5 @@ export default function NavMain() {
       </Button>
       <Button>Administration</Button>
     </ButtonGroup>
-  ) : (
-    ""
-  );
+  ) 
 }
