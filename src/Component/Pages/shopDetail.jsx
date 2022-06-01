@@ -4,8 +4,10 @@ import "../../Style/main.css";
 import { Box, Button, ButtonGroup } from "@mui/material";
 import Users from "./users";
 import { useNavigate } from "react-router-dom";
+import ShopUpsert from "./Popups/shopUpsert";
+import ShopUpdate from "./Popups/shopUpdate";
 
-const Home = () => {
+export default function ShopDetail(props) {
   const history = useNavigate();
 
   useEffect(() => {
@@ -35,7 +37,7 @@ const Home = () => {
             mb: 1,
           }}
         >
-          Shop [001]: Test
+          Shop : {props.shopID}
         </Typography>
         <ButtonGroup
           variant='outlined'
@@ -45,7 +47,7 @@ const Home = () => {
             mb: 1,
           }}
         >
-          <Button>Details</Button>
+          <Button color='black'>Details</Button>
           <Button>Commissions</Button>
           <Button>Product Comm.</Button>
           <Button>Limits</Button>
@@ -59,12 +61,17 @@ const Home = () => {
             Terminal
           </Button>
           <Button>Displays</Button>
-          <Button>Staff</Button>
+          <Button
+            onClick={() => {
+              history("/cashier");
+            }}
+          >
+            Staff
+          </Button>
           <Button>Locations</Button>
         </ButtonGroup>
-        <Users />
+        <ShopUpdate />
       </Box>
     </div>
   );
-};
-export default Home;
+}

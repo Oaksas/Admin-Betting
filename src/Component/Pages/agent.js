@@ -15,6 +15,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import { BASEURL } from "../../Constants/url";
+import Upsert from "./Popups/userUpsert";
+import AgentUpsert from "./Popups/agentUpsert";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -35,18 +37,18 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(TerminalId, shopName) {
-  return { TerminalId, shopName };
+function createData(TerminalId, username) {
+  return { TerminalId, username };
 }
 
-export default function Shops(props) {
+export default function Agents() {
   const [open, setOpen] = useState(false);
   const history = useNavigate();
   const alert = useAlert();
-  const [shops, setShops] = useState([]);
+  const [users, setUsers] = useState([]);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleAllShops = () => {
+  const handleAllusers = () => {
     axios.interceptors.request.use(
       (config) => {
         config.headers.authorization = `${localStorage.getItem("AdminToken")}`;
@@ -57,21 +59,21 @@ export default function Shops(props) {
       }
     );
     axios
-      .get(BASEURL + "shop/")
+      .get(BASEURL + "account")
       .then((response) => {
         if (response.data.get.data) {
-          var shops = response.data.get.data;
-          setShops(shops);
+          var users = response.data.get.data;
+          setUsers(users);
         } else {
-          alert.show("Some Error ");
+          alert.show("Error fetching users ");
         }
       })
       .catch((err) => {
-        alert.show("Some Error ");
+        alert.show(" Error ");
       });
   };
 
-  const deleteShop = (shopname) => {
+  const deleteAgent = (username) => {
     axios.interceptors.request.use(
       (config) => {
         config.headers.authorization = `${localStorage.getItem("AdminToken")}`;
@@ -82,12 +84,11 @@ export default function Shops(props) {
       }
     );
     axios
-      .delete(BASEURL + "shop/" + shopname)
+      .delete(BASEURL + "account/" + username)
       .then((response) => {
-        console.log(response);
         if (response.data.status === "success") {
           alert.success("Deleted Successfully ");
-          handleAllShops();
+          handleAllusers();
         } else {
           alert.show("Some Error Occured");
         }
@@ -100,7 +101,7 @@ export default function Shops(props) {
     if (localStorage.getItem("AdminToken") === "false") {
       history("/login");
     }
-    handleAllShops();
+    handleAllusers();
   }, []);
   return (
     <TableContainer component={Paper}>
@@ -113,7 +114,7 @@ export default function Shops(props) {
         }}
         onClick={handleOpen}
       >
-        Add new shop
+        Add new Agent
       </Button>
       <Modal
         open={open}
@@ -121,50 +122,54 @@ export default function Shops(props) {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-        <ShopUpsert />
+        <AgentUpsert />
       </Modal>
 
       <Table sx={{ width: "90%", mx: 2 }} aria-label='customized table'>
         <TableHead>
           <TableRow>
-            <StyledTableCell align='left'>Terminal ID</StyledTableCell>
-            <StyledTableCell align='left'>Shop Name</StyledTableCell>
-            <StyledTableCell align='left'>Actions</StyledTableCell>
+            <StyledTableCell align='left'>Name</StyledTableCell>
+            <StyledTableCell align='left'>Username</StyledTableCell>
+            <StyledTableCell align='left'>Address</StyledTableCell>
+            <StyledTableCell align='left'>Phone</StyledTableCell>
+            <StyledTableCell align='left'>Email</StyledTableCell>
+            <StyledTableCell align='left'>Active</StyledTableCell>
+            <StyledTableCell align='left'>Action</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {shops.map((row) => (
-            <StyledTableRow key={row.TerminalId}>
-              <StyledTableCell component='th' scope='row'>
-                {row.TerminalId}
-              </StyledTableCell>
-              <StyledTableCell align='left'>{row.shopname}</StyledTableCell>
-              <StyledTableCell align='left'>
-                <Button
-                  variant='text'
-                  color='secondary'
-                  onClick={(e) => {
-                    props.setShopID(row.shopname);
-                    history("/shopDetail");
-                  }}
-                >
-                  Edit
-                </Button>
-                <Button
-                  variant='text'
-                  color='red'
-                  onClick={(e) => {
-                    deleteShop(row.shopname);
-                  }}
-                >
-                  Delete
-                </Button>
-                {/* <Button variant='text' color='colorDanger'>
-                  Lock
-                </Button> */}
-              </StyledTableCell>
-            </StyledTableRow>
-          ))}
+          {users.map((row) =>
+            row.role === "agent" ? (
+              <StyledTableRow key={row.id}>
+                <StyledTableCell component='th' scope='row'>
+                  {row.name}
+                </StyledTableCell>
+                <StyledTableCell align='left'>{row.username}</StyledTableCell>
+                <StyledTableCell align='left'>{row.address}</StyledTableCell>
+                <StyledTableCell align='left'>{row.phone}</StyledTableCell>
+                <StyledTableCell align='left'>{row.email}</StyledTableCell>
+                <StyledTableCell align='left'>
+                  {row.active + ""}
+                </StyledTableCell>
+                <StyledTableCell align='left'>
+                  <Button variant='text' color='secondary'>
+                    Edit
+                  </Button>
+                  <Button
+                    variant='text'
+                    color='red'
+                    onClick={(e) => {
+                      deleteAgent(row.username);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </StyledTableCell>
+              </StyledTableRow>
+            ) : (
+              ""
+            )
+          )}
         </TableBody>
       </Table>
     </TableContainer>

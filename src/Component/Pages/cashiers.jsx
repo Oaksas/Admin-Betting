@@ -15,6 +15,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAlert } from "react-alert";
 import { BASEURL } from "../../Constants/url";
+import CashierUpsert from "./Popups/cashierUpsert";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -35,18 +36,14 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(TerminalId, shopName) {
-  return { TerminalId, shopName };
-}
-
-export default function Shops(props) {
+export default function Cashiers(props) {
   const [open, setOpen] = useState(false);
   const history = useNavigate();
   const alert = useAlert();
-  const [shops, setShops] = useState([]);
+  const [cashiers, setCashiers] = useState([]);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const handleAllShops = () => {
+  const handleAllCashiers = () => {
     axios.interceptors.request.use(
       (config) => {
         config.headers.authorization = `${localStorage.getItem("AdminToken")}`;
@@ -57,11 +54,11 @@ export default function Shops(props) {
       }
     );
     axios
-      .get(BASEURL + "shop/")
+      .get(BASEURL + "cashier/")
       .then((response) => {
         if (response.data.get.data) {
-          var shops = response.data.get.data;
-          setShops(shops);
+          var cashiers = response.data.get.data;
+          setCashiers(cashiers);
         } else {
           alert.show("Some Error ");
         }
@@ -71,7 +68,7 @@ export default function Shops(props) {
       });
   };
 
-  const deleteShop = (shopname) => {
+  const editCashier = (cashiername) => {
     axios.interceptors.request.use(
       (config) => {
         config.headers.authorization = `${localStorage.getItem("AdminToken")}`;
@@ -82,12 +79,37 @@ export default function Shops(props) {
       }
     );
     axios
-      .delete(BASEURL + "shop/" + shopname)
+      .delete(BASEURL + "cashier/" + cashiername)
       .then((response) => {
         console.log(response);
         if (response.data.status === "success") {
           alert.success("Deleted Successfully ");
-          handleAllShops();
+          handleAllCashiers();
+        } else {
+          alert.show("Some Error Occured");
+        }
+      })
+      .catch((err) => {
+        alert.show("Some Error Occured");
+      });
+  };
+  const deleteCashier = (cashiername) => {
+    axios.interceptors.request.use(
+      (config) => {
+        config.headers.authorization = `${localStorage.getItem("AdminToken")}`;
+        return config;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+    axios
+      .delete(BASEURL + "cashier/" + cashiername)
+      .then((response) => {
+        console.log(response);
+        if (response.data.status === "success") {
+          alert.success("Deleted Successfully ");
+          handleAllCashiers();
         } else {
           alert.show("Some Error Occured");
         }
@@ -100,7 +122,7 @@ export default function Shops(props) {
     if (localStorage.getItem("AdminToken") === "false") {
       history("/login");
     }
-    handleAllShops();
+    handleAllCashiers();
   }, []);
   return (
     <TableContainer component={Paper}>
@@ -113,7 +135,7 @@ export default function Shops(props) {
         }}
         onClick={handleOpen}
       >
-        Add new shop
+        Add new Cashier
       </Button>
       <Modal
         open={open}
@@ -121,31 +143,35 @@ export default function Shops(props) {
         aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
-        <ShopUpsert />
+        <CashierUpsert shopID={props.shopID} />
       </Modal>
 
       <Table sx={{ width: "90%", mx: 2 }} aria-label='customized table'>
         <TableHead>
           <TableRow>
-            <StyledTableCell align='left'>Terminal ID</StyledTableCell>
-            <StyledTableCell align='left'>Shop Name</StyledTableCell>
+            <StyledTableCell align='left'>Username</StyledTableCell>
+            <StyledTableCell align='left'>Name</StyledTableCell>
+
+            <StyledTableCell align='left'>Active</StyledTableCell>
+
             <StyledTableCell align='left'>Actions</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {shops.map((row) => (
-            <StyledTableRow key={row.TerminalId}>
+          {cashiers.map((row) => (
+            <StyledTableRow key={row.id}>
               <StyledTableCell component='th' scope='row'>
-                {row.TerminalId}
+                {row.username}
               </StyledTableCell>
-              <StyledTableCell align='left'>{row.shopname}</StyledTableCell>
+              <StyledTableCell align='left'>{row.name}</StyledTableCell>
+              <StyledTableCell align='left'>{row.active + ""}</StyledTableCell>
+
               <StyledTableCell align='left'>
                 <Button
                   variant='text'
                   color='secondary'
                   onClick={(e) => {
-                    props.setShopID(row.shopname);
-                    history("/shopDetail");
+                    editCashier(row.username);
                   }}
                 >
                   Edit
@@ -154,7 +180,7 @@ export default function Shops(props) {
                   variant='text'
                   color='red'
                   onClick={(e) => {
-                    deleteShop(row.shopname);
+                    deleteCashier(row.username);
                   }}
                 >
                   Delete

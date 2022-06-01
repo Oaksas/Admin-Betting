@@ -8,6 +8,10 @@ import Terminal from "./Component/Pages/terminal";
 import Login from "./Component/Pages/login";
 import Reports from "./Component/Pages/reports";
 import Shops from "./Component/Pages/shop";
+import Agents from "./Component/Pages/agent";
+import ShopDetail from "./Component/Pages/shopDetail";
+import { useState } from "react";
+import Cashier from "./Component/Pages/cashier";
 
 const theme = createTheme({
   palette: {
@@ -35,6 +39,7 @@ const theme = createTheme({
   },
 });
 function App() {
+  const [shopID, setShopID] = useState(null);
   return (
     <ThemeProvider theme={theme}>
       <div className='App'>
@@ -45,8 +50,18 @@ function App() {
             <Route path='/' element={<Home />}></Route>
             <Route path='/terminal' element={<Terminal />} />
             <Route path='/report' element={<Reports />} />
-            <Route path='/shop' element={<Shops />} />
+            <Route
+              path='/shops'
+              element={<Shops setShopID={(value) => setShopID(value)} />}
+            />
+            <Route path='/agents' element={<Agents />} />
             <Route path='/login' element={<Login />} />
+            <Route path='/cashier' element={<Cashier shopID={shopID} />} />
+
+            <Route
+              path='/shopDetail'
+              element={<ShopDetail shopID={shopID} />}
+            />
           </Routes>
         </BrowserRouter>
       </div>

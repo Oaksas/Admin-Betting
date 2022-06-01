@@ -41,7 +41,13 @@ const Terminal = () => {
             mb: 1,
           }}
         >
-          <Button>Details</Button>
+          <Button
+            onClick={() => {
+              history("/shopDetail");
+            }}
+          >
+            Details
+          </Button>
           <Button>Commissions</Button>
           <Button>Product Comm.</Button>
           <Button>Limits</Button>
@@ -49,7 +55,13 @@ const Terminal = () => {
           <Button>Products</Button>
           <Button color='black'>Terminal</Button>
           <Button>Displays</Button>
-          <Button>Staff</Button>
+          <Button
+            onClick={() => {
+              history("/cashier");
+            }}
+          >
+            Staff
+          </Button>
           <Button>Locations</Button>
         </ButtonGroup>
         <Terminals />

@@ -30,9 +30,6 @@ export default function Login() {
   const alert = useAlert();
   const [isActive, setIsActive] = useState(false);
 
-  if (localStorage.getItem("AdminToken")) {
-    history("/");
-  }
   const handleOnChange = (e) => {
     if (e.target.id === "username") {
       setUsername(e.target.value);
@@ -55,7 +52,7 @@ export default function Login() {
         username: username,
         password: password,
       };
-      if (localStorage.getItem("AdminToken")) {
+      if (!(localStorage.getItem("AdminToken") === "false")) {
         setProcessing(false);
         setIsActive(false);
 

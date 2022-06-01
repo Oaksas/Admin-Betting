@@ -41,7 +41,7 @@ const Navbar = () => {
 
   const handleCloseUserMenu = (event) => {
     if (event === "Logout") {
-      localStorage.setItem("AdminToken", null);
+      localStorage.setItem("AdminToken", false);
       console.log(localStorage.getItem("AdminToken"));
       history("/login");
     }
@@ -59,7 +59,7 @@ const Navbar = () => {
     };
   }, []);
 
-  return localStorage.getItem("AdminToken") == null ? (
+  return localStorage.getItem("AdminToken") === "false" ? (
     ""
   ) : (
     <div>

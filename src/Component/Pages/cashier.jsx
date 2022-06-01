@@ -2,19 +2,15 @@ import React, { useState, useEffect } from "react";
 import Typography from "@mui/material/Typography";
 import "../../Style/main.css";
 import { Box, Button, ButtonGroup } from "@mui/material";
-import Users from "./users";
+import Cashiers from "./cashiers";
 import { useNavigate } from "react-router-dom";
 
-const Home = () => {
+const Cashier = (props) => {
   const history = useNavigate();
+  if (!localStorage.getItem("AdminToken")) {
+    history("/login");
+  }
 
-  useEffect(() => {
-    if (localStorage.getItem("AdminToken") === "false") {
-      console.log(localStorage.getItem("AdminToken"));
-
-      history("/login");
-    }
-  }, []);
   return (
     <div sx={{ m: 3 }}>
       <Box
@@ -35,7 +31,7 @@ const Home = () => {
             mb: 1,
           }}
         >
-          Shop [001]: Test
+          Shop [001]: Terminal
         </Typography>
         <ButtonGroup
           variant='outlined'
@@ -45,26 +41,26 @@ const Home = () => {
             mb: 1,
           }}
         >
-          <Button>Details</Button>
+          <Button
+            onClick={() => {
+              history("/shopDetail");
+            }}
+          >
+            Details
+          </Button>
           <Button>Commissions</Button>
           <Button>Product Comm.</Button>
           <Button>Limits</Button>
           <Button>Permissions</Button>
           <Button>Products</Button>
-          <Button
-            onClick={() => {
-              history("/terminal");
-            }}
-          >
-            Terminal
-          </Button>
+          <Button>Terminal</Button>
           <Button>Displays</Button>
-          <Button>Staff</Button>
+          <Button color='black'>Staff</Button>
           <Button>Locations</Button>
         </ButtonGroup>
-        <Users />
+        <Cashiers shopID={props.shopID} />
       </Box>
     </div>
   );
 };
-export default Home;
+export default Cashier;

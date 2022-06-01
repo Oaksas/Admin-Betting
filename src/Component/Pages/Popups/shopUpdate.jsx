@@ -9,7 +9,7 @@ import { BASEURL } from "../../../Constants/url";
 import { Button, MenuItem, Select, InputLabel } from "@mui/material";
 const style = {
   position: "absolute",
-  top: "50%",
+  top: "60%",
   left: "50%",
   transform: "translate(-50%, -50%)",
   width: 500,
@@ -19,11 +19,15 @@ const style = {
   borderRadius: "10px",
 };
 
-export default function ShopUpsert() {
+export default function ShopUpdate() {
   const alert = useAlert();
 
   const [userID, setUserID] = useState("");
   const [shopName, setShopName] = useState();
+  const [shopAddress, setShopAddress] = useState();
+  const [shopTelephone, setShopTelephone] = useState();
+  const [email, setEmail] = useState();
+  const [licenseNo, setLicenseNo] = useState();
   const [users, setUsers] = useState([]);
 
   const handleIDChange = (event) => {
@@ -31,6 +35,19 @@ export default function ShopUpsert() {
   };
   const handleNameChange = (event) => {
     setShopName(event.target.value);
+  };
+  const handleAddressChange = (event) => {
+    setShopAddress(event.target.value);
+  };
+
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+  const handleLicenseNoChange = (event) => {
+    setLicenseNo(event.target.value);
+  };
+  const handleTelChange = (event) => {
+    setShopTelephone(event.target.value);
   };
   const handleAllUsers = () => {
     axios.interceptors.request.use(
@@ -57,7 +74,8 @@ export default function ShopUpsert() {
         alert.show("Error try again ");
       });
   };
-  const handleRegisterShop = () => {
+
+  const handleEditShop = () => {
     const param = {
       UserId: userID,
       shopname: shopName,
@@ -72,11 +90,11 @@ export default function ShopUpsert() {
       }
     );
     axios
-      .post(BASEURL + "shop/register", param)
+      .put(BASEURL + "shop/", param)
       .then((response) => {
         console.log(response);
-        if (response.data.post.data) {
-          alert.success("Shop Created ");
+        if (response.data.put.data) {
+          alert.success("Shop Updated ");
         } else {
           alert.show("Error ....Try again ");
         }
@@ -88,6 +106,7 @@ export default function ShopUpsert() {
   useEffect(() => {
     handleAllUsers();
   }, []);
+
   return (
     <div>
       <Box
@@ -119,10 +138,46 @@ export default function ShopUpsert() {
             onChange={(e) => handleNameChange(e)}
             sx={{ m: 1, width: 200 }}
           />
+
+          <TextField
+            id='address'
+            label='Shop Address'
+            type='search'
+            value={shopAddress}
+            onChange={(e) => handleAddressChange(e)}
+            sx={{ m: 1, width: 200 }}
+          />
+
+          <TextField
+            id='tel'
+            label='Tel'
+            type='tel'
+            value={shopTelephone}
+            onChange={(e) => handleTelChange(e)}
+            sx={{ m: 1, width: 200 }}
+          />
+
+          <TextField
+            id='email'
+            label='Shop Email'
+            type='email'
+            value={email}
+            onChange={(e) => handleEmailChange(e)}
+            sx={{ m: 1, width: 200 }}
+          />
+          <TextField
+            id='license'
+            label='Shop License'
+            type='search'
+            value={licenseNo}
+            onChange={(e) => handleLicenseNoChange(e)}
+            sx={{ m: 1, width: 200 }}
+          />
+
           <Button
             variant='contained'
             color='secondary'
-            onClick={handleRegisterShop}
+            onClick={handleEditShop}
             sx={{ m: 1, width: 200 }}
           >
             Add Shop

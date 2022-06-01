@@ -9,12 +9,10 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import MomentUtils from "@date-io/moment";
 import { useNavigate } from "react-router-dom";
-
 import PropTypes from "prop-types";
 import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import moment from "moment";
-
 import FirstPageIcon from "@mui/icons-material/FirstPage";
 import KeyboardArrowLeft from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
@@ -45,6 +43,7 @@ import Coin from "react-cssfx-loading/lib/CircularProgress";
 
 import axios from "axios";
 import { BASEURL } from "../../Constants/url";
+import { useAlert } from "react-alert";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -135,6 +134,8 @@ TablePaginationActions.propTypes = {
 };
 
 export default function Report() {
+  const alert = useAlert();
+
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -311,7 +312,7 @@ export default function Report() {
       });
   };
   useEffect(() => {
-    if (localStorage.getItem("AdminToken") == null) {
+    if (localStorage.getItem("AdminToken") === "false") {
       history("/login");
     }
     handleAllReport();

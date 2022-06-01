@@ -11,6 +11,8 @@ import { Button, Modal } from "@mui/material";
 import "../../Style/main.css";
 import "reactjs-popup/dist/index.css";
 import UpsertTerminal from "./Popups/terminalUpsert";
+import { useNavigate } from "react-router-dom";
+
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -108,7 +110,10 @@ export default function Terminals() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const history = useNavigate();
 
+  if (localStorage.getItem("AdminToken") === "false") {
+  }
   return (
     <TableContainer component={Paper} sx={{ m: 4, pb: 3 }}>
       <Button

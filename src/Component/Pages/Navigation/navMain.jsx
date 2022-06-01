@@ -15,10 +15,16 @@ export default function NavMain() {
       fullWidth
     >
       <Button>Home</Button>
-      <Button>Agent</Button>
       <Button
         onClick={() => {
-          history("/shop");
+          history("/agents");
+        }}
+      >
+        Agent
+      </Button>
+      <Button
+        onClick={() => {
+          history("/shops");
         }}
       >
         Shop
